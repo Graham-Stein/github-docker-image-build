@@ -1,12 +1,5 @@
 name: Build and Push Docker Image
 
-env:
-    - name: downcase REPO
-      run: |
-        echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-    - name: use REPO
-      run: echo "The value of REPO is: ${REPO}"
-
 on:
   push:
     branches:
@@ -32,4 +25,4 @@ jobs:
         run: docker build -t ghcr.io/${{ $REPO }}/my-image:latest .
 
       - name: Push Docker Image
-        run: docker push ghcr.io/${{ github.repository }}/my-image:latest
+        run: docker push ghcr.io/${{ $REPO }}/my-image:latest
