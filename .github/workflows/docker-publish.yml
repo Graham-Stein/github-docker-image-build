@@ -1,28 +1,37 @@
-name: Build and Push Docker Image
+name: Build and Push Docker Image # the name of the Workflow
 
+# The criteria that trigger a buil
+# in this case a push to the main branch
 on:
   push:
     branches:
       - main # Trigger on push to the main branch
 
+# Define the job here
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # the type of container used for the build
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # secrets.GITHUB_TOKEN refers to the repository token that is available during the build - you don't need to set this up
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      # This is required if there are any uppercase characters in the github repo name
+      # eg if GitHub username includes any uppercase characters
       - name: Downcase REPO
         shell: bash
         run: |
           echo "REPO=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
+      # Build the image from the Dockerfile with the name defined below
+      # Note the REPO variable created above is referred to in the env object, eg env.REPO
       - name: Build Docker Image
         run: docker build -t ghcr.io/${{ env.REPO }}/my-image:latest .
 
+      # Push the image, tagged with latest
       - name: Push Docker Image
         run: docker push ghcr.io/${{ env.REPO }}/my-image:latest
