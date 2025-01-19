@@ -4,6 +4,10 @@
 
 This repo is a Hello World example of how to automate building a docker image from a `Dockerfile` and push it to GitHub Container registry using GitHub actions.
 
+## Branch protection
+
+The main branch is protected and requires a pull request to merge.
+
 ## Resources
 
 * [GitHub Actions Documentation](https://docs.github.com/en/actions)
